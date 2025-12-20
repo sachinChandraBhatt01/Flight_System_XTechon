@@ -3,7 +3,8 @@
   "module": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "seed:flights": "node ./src/seed/flight.seed.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

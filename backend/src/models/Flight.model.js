@@ -16,11 +16,13 @@ const flightSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        tolowercase: true,
     },
     arrival_city: {
         type: String,
         required: true,
         trim: true,
+        tolowercase: true,
     },
     base_price: {
         type: Number,

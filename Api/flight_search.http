@@ -1,0 +1,2 @@
+GET http://localhost:5000/api/flights/search?from=DELHI&to=MUMBAI
+Content-Type: application/json
