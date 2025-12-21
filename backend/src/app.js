@@ -15,11 +15,13 @@ app.use(xss());
 // Routes import
 import flightRoutes from './routes/flight.routes.js';
 import authRoutes from './routes/auth.routes.js';
-import walletRoutes from "./routes/wallet.routes.js"
+import walletRoutes from "./routes/wallet.routes.js";
+import bookingRoutes from "./routes/booking.routes.js";
 
 // Routes setting
 app.use('/api/flights', flightRoutes);
 app.use('/api/auth', authRoutes);
 app.use("/api/wallet" , walletRoutes);
+app.use("/api/booking" , bookingRoutes);
 
 export default app;

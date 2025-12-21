@@ -1,0 +1,10 @@
+POST  http://localhost:5000/api/booking/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTQ3YjdlNjRkNzMwMTg3ZGYyYjcyZjMiLCJpYXQiOjE3NjYzMDc4NjMsImV4cCI6MTc2NjMxMTQ2M30.tA9E-VOMS4X1x8dON1e_1FAS_htAv8m59O02tImKuDs
+Content-Type: application/json
+
+{
+    "flightId": "6947ba9f894e6a986648fc0f",
+    "passengerName": "mahi"
+}
+
+
