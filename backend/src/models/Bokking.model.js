@@ -28,7 +28,6 @@ const bookingSchema = new Schema({
     },
     ticket_path: {
         type: String,
-        required: true,
         trim: true,
     },
 }, {timestamps: true});
