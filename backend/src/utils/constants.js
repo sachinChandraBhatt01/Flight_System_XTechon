@@ -1,2 +1,2 @@
 export const FLIGHT_RESULT_LIMIT = 10;
-
+export const WALLET_DEFAULT_BALANCE = 50000;

@@ -1,6 +1,4 @@
 import mongoose , {Schema} from "mongoose";
-import { use } from "react";
-import { email, lowercase, trim } from "zod";
 
 const userSchema = new Schema({
     username: {

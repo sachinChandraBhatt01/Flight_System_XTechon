@@ -14,8 +14,10 @@ app.use(xss());
 
 // Routes import
 import flightRoutes from './routes/flight.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 // Routes setting
 app.use('/api/flights', flightRoutes);
+app.use('/api/auth', authRoutes);
 
 export default app;
