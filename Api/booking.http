@@ -1,10 +1,10 @@
 POST  http://localhost:5000/api/booking/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTQ3YjdlNjRkNzMwMTg3ZGYyYjcyZjMiLCJpYXQiOjE3NjYzMDc4NjMsImV4cCI6MTc2NjMxMTQ2M30.tA9E-VOMS4X1x8dON1e_1FAS_htAv8m59O02tImKuDs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTQ3Y2E4NmZjOTg2MDM4MjdmNGY2ODUiLCJpYXQiOjE3NjYzMTI2MDEsImV4cCI6MTc2NjMxNjIwMX0.PRLG5asm2rwa1dMI1km9lJfpRNU2HVRw87DwO_7Da20
 Content-Type: application/json
 
 {
-    "flightId": "6947ba9f894e6a986648fc0f",
-    "passengerName": "mahi"
+    "flightId": "6947caf7cae760a4832a79aa",
+    "passengerName": "sachin chandra"
 }
 
 

@@ -7,7 +7,7 @@ import BookingAttemptModel from "../models/BookingAttempt.model.js";
 
 
 const generatePNR = () =>{
-    return `PNR ${Date.now()} ${Math.floor(Math.random() * 1000)}`
+    return `PNR${Date.now()}${Math.floor(Math.random() * 1000)}`
 }
 
 export const bookFlight = async (userId , flightId , passengerName) =>{
@@ -48,7 +48,15 @@ export const bookFlight = async (userId , flightId , passengerName) =>{
     }
 
     booking.ticket_path = pdfPath;
+    booking.save();
 
     return booking;
+
+}
+
+export const getUserBookings = async (userId) =>{
+    const bookings = await Booking.find({userId}).populate("flightId").sort({createdAt : -1})
+
+    return bookings;
 
 }
