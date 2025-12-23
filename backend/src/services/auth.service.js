@@ -25,9 +25,9 @@ const registerUser = async (userData) => {
 };
 
 const loginUser = async ({email, password}) => {
-    console.log("get data" , email , password);
+    // console.log("get data" , email , password);
     const user = await User.findOne({email});
-    console.log(user);
+    // console.log(user);
     if (!user) {
         throw new Error('Invalid email or password');
     }
@@ -35,13 +35,13 @@ const loginUser = async ({email, password}) => {
     if (!isPasswordValid) {
         throw new Error('Invalid email or password');
     }
-    console.log(isPasswordValid);
+    // console.log(isPasswordValid);
     
     const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-    console.log(token);
+    // console.log(token);
 
     const {password : _ , ...retUser} = user._doc 
-    console.log(retUser);
+    // console.log(retUser);
     
     return {retUser, token};
 };

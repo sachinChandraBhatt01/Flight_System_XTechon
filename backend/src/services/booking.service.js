@@ -3,47 +3,56 @@ import Booking from "../models/Bokking.model.js";
 import { applyDynamicPricing } from "./pricing.service.js";
 import { deductedFromWallet } from "./wallet.service.js";
 import { generateTicketPdf } from "../utils/pdf.js";
-import BookingAttemptModel from "../models/BookingAttempt.model.js";
+import BookingAttempt from "../models/BookingAttempt.model.js";
 
 
-const generatePNR = () =>{
+const generatePNR = () => {
     return `PNR${Date.now()}${Math.floor(Math.random() * 1000)}`
 }
 
-export const bookFlight = async (userId , flightId , passengerName) =>{
+export const bookFlight = async (userId, flightId, passengerName) => {
     const fllight = await Flight.findById(flightId);
-    if(!fllight) throw new Error("Flight Not Found");
+    if (!fllight) throw new Error("Flight Not Found");
     // console.log(fllight)
     // apply surge pricing
-    const finalPrice = await applyDynamicPricing(userId , flightId);
+    await BookingAttempt.create({
+        userId,
+        flightId,
+    });
+    // console.log("hey", flightId)
 
-    // deduct wallet 
-    await deductedFromWallet(userId , finalPrice);
-    
-    // create booking
+    // console.log("hey");
     const pnr = generatePNR();
-    console.log(pnr);
+    // console.log("pnr", pnr);
     const booking = await Booking.create({
         userId,
         flightId,
         passengerName,
-        price_paid : finalPrice,
+        price_paid: fllight.current_price,
         pnr
     })
-    console.log(pnr)
-    console.log(fllight)
+
+    // deduct wallet 
+    await deductedFromWallet(userId, fllight.current_price);
+
+    // create booking
+
+    const finalPrice = await applyDynamicPricing(flightId);
+    // console.log(finalPrice);
+    // console.log(pnr)
+    // console.log(fllight)
     // generate pdf
     const pdfPath = await generateTicketPdf({
         passengerName,
-        airline : fllight.airline,
-        flightId : fllight.flight_id,
-        route : `${fllight.departure_city} - ${fllight.arrival_city}`,
-        price : finalPrice,
+        airline: fllight.airline,
+        flightId: fllight.flight_id,
+        route: `${fllight.departure_city} - ${fllight.arrival_city}`,
+        price: fllight.current_price,
         pnr,
-        date : new Date().toLocaleString(),
+        date: new Date().toLocaleString(),
     })
-    console.log(pdfPath)
-    if(!pdfPath){
+    // console.log(pdfPath)
+    if (!pdfPath) {
         throw new Error("pdf path cannot set");
     }
 
@@ -54,8 +63,8 @@ export const bookFlight = async (userId , flightId , passengerName) =>{
 
 }
 
-export const getUserBookings = async (userId) =>{
-    const bookings = await Booking.find({userId}).populate("flightId").sort({createdAt : -1})
+export const getUserBookings = async (userId) => {
+    const bookings = await Booking.find({ userId }).populate("flightId").sort({ createdAt: -1 })
 
     return bookings;
 

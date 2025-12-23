@@ -10,12 +10,12 @@ export const getWalletByUser = async (userId) => {
 
 export const deductedFromWallet = async (userId , amount) =>{
     const wallet = await Wallet.findOne({userId});
-    console.log(wallet);
     if (wallet.balance < amount) {
         throw new Error("Insufficient wallet balance");
     }
+    // console.log(wallet.balance);
     wallet.balance -= amount;
     await wallet.save();
-
+    
     return wallet.balance;
 }

@@ -4,13 +4,18 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { xss } from 'express-xss-sanitizer';
 const app = express();
+import cookieParser from 'cookie-parser';
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin : "http://localhost:5173",
+    credentials:true
+}));
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(xss());
+app.use(cookieParser())
 
 // Routes import
 import flightRoutes from './routes/flight.routes.js';

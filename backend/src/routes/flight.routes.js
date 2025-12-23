@@ -1,8 +1,10 @@
 import Router from 'express';
-import {searchFlights} from '../controllers/flight.controller.js';
+import {getAllFlights, searchFlights} from '../controllers/flight.controller.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/search', searchFlights);
+router.get('/search',authMiddleware ,  searchFlights);
+router.get("/" , authMiddleware , getAllFlights)
 
 export default router;

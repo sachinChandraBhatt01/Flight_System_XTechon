@@ -2,68 +2,61 @@ import BookingAttempt from "../models/BookingAttempt.model.js";
 import Flight from "../models/Flight.model.js";
 
 import {
-    SURGE_PRECENTAGE,
-    SURGE_ATTEMPT_LIMIT,
-    SURGE_TIME_WINDOW_MIN,
-    SURGE_RESET_MIN
+  SURGE_PRECENTAGE,
+  SURGE_ATTEMPT_LIMIT,
+  SURGE_TIME_WINDOW_MIN,
+  SURGE_RESET_MIN
 } from "../utils/constants.js";
 
-
-export const applyDynamicPricing = async (userId, flightId) => {
+export const applyDynamicPricing = async (flightId) => {
   const now = new Date();
 
-  const surgeWindowStart = new Date(
+  const surgeWindow = new Date(
     now.getTime() - SURGE_TIME_WINDOW_MIN * 60 * 1000
   );
 
-  const resetWindowStart = new Date(
+  const resetWindow = new Date(
     now.getTime() - SURGE_RESET_MIN * 60 * 1000
   );
 
   const flight = await Flight.findById(flightId);
-  if (!flight) throw new Error("Flight not found");
-
-  // 🔹 Count attempts in last 5 min (for surge)
-  const surgeAttempts = await BookingAttempt.countDocuments({
-    userId,
-    flightId,
-    attemptedAt: { $gte: surgeWindowStart },
-  });
-
-  // 🔹 Count attempts in last 10 min (for reset)
-  const recentAttempts = await BookingAttempt.countDocuments({
-    userId,
-    flightId,
-    attemptedAt: { $gte: resetWindowStart },
-  });
-
-  /**
-   * RESET LOGIC
-   * Agar 10 min mein koi attempt nahi hua
-   */
-  if (recentAttempts === 0) {
-    flight.current_price = flight.base_price;
+  if (!flight) {
+    throw new Error("Flight not found");
   }
 
-  /**
-   * SURGE LOGIC
-   * 5 min mein 3 attempts ke baad
-   */
-  else if (surgeAttempts >= SURGE_ATTEMPT_LIMIT) {
-    flight.current_price = Math.round(
+  const lastAttempt = await BookingAttempt.findOne({ flightId })
+    .sort({ attemptedAt: -1 });
+
+  // 🔁 RESET
+  if (!lastAttempt || lastAttempt.attemptedAt < resetWindow) {
+    if (flight.current_price !== flight.base_price) {
+      flight.current_price = flight.base_price;
+      await flight.save();
+    }
+    return flight.current_price; // ✅ ALWAYS RETURN
+  }
+
+  const recentAttempts = await BookingAttempt.countDocuments({
+    flightId,
+    attemptedAt: { $gte: surgeWindow },
+  });
+
+  // 🚀 SURGE
+  if (recentAttempts >= SURGE_ATTEMPT_LIMIT) {
+    const surgedPrice = Math.round(
       flight.base_price * (1 + SURGE_PRECENTAGE)
     );
+
+    if (flight.current_price !== surgedPrice) {
+      flight.current_price = surgedPrice;
+      await flight.save();
+    }
   }
 
-  await flight.save();
-
-  // 🔹 Record current attempt AFTER pricing logic
-  await BookingAttempt.create({
-    userId,
-    flightId,
-    attemptedAt: now,
-  });
-
+  // ✅ DEFAULT RETURN
   return flight.current_price;
 };
+
+
+
 
