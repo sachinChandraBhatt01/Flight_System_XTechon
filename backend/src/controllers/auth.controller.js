@@ -41,6 +41,7 @@ export const login = async (req, res) => {
             httpOnly: true,
             secure: true, // required for HTTPS
             sameSite: 'none', // allow cross-site cookies
+            path : "/"
         });
 
         res.status(200).json({ message: "Login successful", retUser });
@@ -66,7 +67,12 @@ export const myData = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('my_cookie', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+    });
     res.status(200).json({ message: "Logout successful" });
 }
 
