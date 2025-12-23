@@ -31,11 +31,19 @@ export const login = async (req, res) => {
         }
         // console.log("hey");
         const { retUser, token } = await loginUser({ email: parsed.data.email, password: parsed.data.password });
+        // res.cookie('token', token, {
+        //     maxAge: 1000 * 60 * 60 * 24 * 7,
+        //     httpOnly: true,
+        // });
+
         res.cookie('token', token, {
-            maxAge: 1000 * 60 * 60 * 24 * 7,
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
             httpOnly: true,
+            secure: true, // required for HTTPS
+            sameSite: 'none', // allow cross-site cookies
         });
-        res.status(200).json({ message: "Login successful", retUser});
+
+        res.status(200).json({ message: "Login successful", retUser });
     } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }
@@ -51,7 +59,7 @@ export const myData = async (req, res) => {
     if (!resData) {
         throw new Error("User not fined")
     }
-    const {password : _ , ...data} = resData._doc;
+    const { password: _, ...data } = resData._doc;
     // const { password: _, ...user } = newUser._doc;
 
     return res.status(200).json({ "message": "success", data })
