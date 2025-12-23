@@ -5,10 +5,12 @@ import morgan from 'morgan';
 import { xss } from 'express-xss-sanitizer';
 const app = express();
 import cookieParser from 'cookie-parser';
+import dotenv from "dotenv"
+dotenv.config();
 
 // Middleware
 app.use(cors({
-    origin : "http://localhost:5173",
+    origin : process.env.FRONTEND_URL ||"http://localhost:5173",
     credentials:true
 }));
 app.use(express.json());
