@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      await api.post("/auth/login", { email, password })
+      await api.post("/auth/login", { email, password }).then(e => console.log(e))
       alert("User logged in successfully")
       setEmail("");
       setPassword("");
